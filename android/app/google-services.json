@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "190443842551",
+    "project_id": "fund-monitoring-f7c67",
+    "storage_bucket": "fund-monitoring-f7c67.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190443842551:android:9c0aa2fe2f3003a4f2dcf2",
+        "android_client_info": {
+          "package_name": "com.example.fund_monitoring"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "190443842551-s0n8nonlfaflrrqllhlo1rntneol1lmc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqQNmji4uucahR9Y9W33utMhEh2iBD1Tw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "190443842551-s0n8nonlfaflrrqllhlo1rntneol1lmc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
