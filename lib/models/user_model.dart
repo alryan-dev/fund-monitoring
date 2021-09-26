@@ -1,5 +1,11 @@
 class UserModel {
-  late String uid;
-  late String displayName;
-  late String email;
+  String uid = "";
+  String displayName = "";
+  String email = "";
+
+  UserModel.fromMap(Map fund) {
+    this.uid = fund['uid'];
+    this.displayName = fund['displayName'] ?? '';
+    this.email = fund['email'];
+  }
 }
