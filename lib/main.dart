@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fund_monitoring/screens/fund_form_screen.dart';
 import 'package:fund_monitoring/screens/home_screen.dart';
 import 'package:fund_monitoring/screens/login_screen.dart';
 import 'package:fund_monitoring/screens/signup_screen.dart';
@@ -56,6 +57,7 @@ class MyApp extends StatelessWidget {
         '/log-in': (context) => LoginScreen(),
         '/sign-up': (context) => SignUpScreen(),
         '/home': (context) => HomeScreen(),
+        '/fund-form': (context) => FundFormScreen(),
       },
     );
   }
