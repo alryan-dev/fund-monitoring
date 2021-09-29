@@ -99,7 +99,7 @@ class _LoginFormState extends State<LoginForm> {
                 password: _passwordCtrl.text,
               );
 
-              Navigator.pushReplacementNamed(context, '/home');
+              Navigator.pushReplacementNamed(context, '/funds');
               ScaffoldMessenger.of(context).removeCurrentSnackBar();
 
             } on FirebaseAuthException catch (e) {

@@ -2,10 +2,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fund_monitoring/app_states/selected_fund.dart';
+import 'package:fund_monitoring/screens/fund_details/fund_details_screen.dart';
 import 'package:fund_monitoring/screens/fund_form_screen.dart';
-import 'package:fund_monitoring/screens/home_screen.dart';
+import 'package:fund_monitoring/screens/funds_screen.dart';
 import 'package:fund_monitoring/screens/login_screen.dart';
 import 'package:fund_monitoring/screens/signup_screen.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -49,16 +52,22 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     User? user = FirebaseAuth.instance.currentUser;
 
-    return MaterialApp(
-      title: 'Fund Monitoring',
-      initialRoute: (user != null) ? '/home' : '/log-in',
-      debugShowCheckedModeBanner: false,
-      routes: {
-        '/log-in': (context) => LoginScreen(),
-        '/sign-up': (context) => SignUpScreen(),
-        '/home': (context) => HomeScreen(),
-        '/fund-form': (context) => FundFormScreen(),
-      },
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => SelectedFund()),
+      ],
+      child: MaterialApp(
+        title: 'Fund Monitoring',
+        initialRoute: (user != null) ? '/funds' : '/log-in',
+        debugShowCheckedModeBanner: false,
+        routes: {
+          '/log-in': (context) => LoginScreen(),
+          '/sign-up': (context) => SignUpScreen(),
+          '/funds': (context) => FundsScreen(),
+          '/fund-form': (context) => FundFormScreen(),
+          '/fund-details': (context) => FundDetailsScreen(),
+        },
+      ),
     );
   }
 }

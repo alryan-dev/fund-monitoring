@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fund_monitoring/app_states/selected_fund.dart';
 import 'package:fund_monitoring/models/fund.dart';
-import 'package:intl/intl.dart';
+import 'package:fund_monitoring/utils.dart';
+import 'package:provider/provider.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class FundsScreen extends StatelessWidget {
+  const FundsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +35,6 @@ class FundsList extends StatefulWidget {
 class _FundsListState extends State<FundsList> {
   @override
   Widget build(BuildContext context) {
-    final numberFormat = NumberFormat("#,##0.00", "en_PH");
-
     return StreamBuilder(
       stream: FirebaseFirestore.instance.collection('funds').snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -52,8 +52,7 @@ class _FundsListState extends State<FundsList> {
           itemBuilder: (context, idx) {
             Fund fund = Fund.fromFirestore(snapshot.data!.docs[idx]);
             String dateRange =
-                "${DateFormat.yMMMd().format(fund.dateFrom as DateTime)} - "
-                "${DateFormat.yMMMd().format(fund.dateFrom as DateTime)}";
+                "${Utils.dateTimeToString(fund.dateFrom)} - ${Utils.dateTimeToString(fund.dateTo)}";
 
             return ListTile(
               isThreeLine: true,
@@ -63,13 +62,13 @@ class _FundsListState extends State<FundsList> {
                   style: DefaultTextStyle.of(context).style,
                   children: [
                     TextSpan(
-                      text: '₱ ${numberFormat.format(fund.amount)}\n',
+                      text: '${Utils.formatAmount(fund.amount)}\n',
                       style: TextStyle(fontSize: 15),
                     ),
                     TextSpan(
                       text: '${(fund.closed) ? "Closed" : "Active"}',
                       style: TextStyle(
-                        color: (fund.closed) ? Colors.blue : Colors.green,
+                        color: (fund.closed) ? Colors.red : Colors.green,
                       ),
                     ),
                   ],
@@ -79,6 +78,12 @@ class _FundsListState extends State<FundsList> {
                 height: double.infinity,
                 child: Icon(Icons.chevron_right_outlined, size: 30),
               ),
+              onTap: () {
+                SelectedFund selectedFund =
+                    Provider.of<SelectedFund>(context, listen: false);
+                selectedFund.fund = fund;
+                Navigator.pushNamed(context, '/fund-details');
+              },
             );
           },
           separatorBuilder: (BuildContext context, int index) =>

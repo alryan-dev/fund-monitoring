@@ -162,9 +162,9 @@ class _FundFormState extends State<FundForm> {
 
     if (dateTimeRange != null) {
       _fund.dateFrom = dateTimeRange.start;
-      _dateFromCtrl.text = DateFormat.yMMMd().format(dateTimeRange.start);
+      _dateFromCtrl.text = Utils.dateTimeToString(dateTimeRange.start);
       _fund.dateTo = dateTimeRange.end;
-      _dateToCtrl.text = DateFormat.yMMMd().format(dateTimeRange.end);
+      _dateToCtrl.text = Utils.dateTimeToString(dateTimeRange.end);
     }
   }
 
@@ -211,7 +211,7 @@ class _FundFormState extends State<FundForm> {
         'displayName': FirebaseAuth.instance.currentUser?.displayName,
         'email': FirebaseAuth.instance.currentUser?.email,
       },
-      'createdOn': DateFormat.yMMMd().format(DateTime.now()),
+      'createdOn': Utils.dateTimeToString(DateTime.now()),
       'closed': false
     };
 
@@ -219,7 +219,7 @@ class _FundFormState extends State<FundForm> {
       await FirebaseFirestore.instance.collection('funds').add(fund);
       Navigator.pushNamedAndRemoveUntil(
         context,
-        '/home',
+        '/funds',
         (Route<dynamic> route) => false,
       );
       Utils.showSnackBar(context, "Fund Created!");

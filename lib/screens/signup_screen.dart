@@ -149,14 +149,20 @@ class _SignUpFormState extends State<SignUpForm> {
             );
 
             try {
-              await FirebaseAuth.instance.createUserWithEmailAndPassword(
+              // Register with email and password
+              UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
                 email: _emailCtrl.text,
                 password: _passwordCtrl.text,
               );
 
+              // Save user's display name
+              userCredential.user?.updateDisplayName(_nameCtrl.text);
+
+              // Navigate to funds list page
               Navigator.pushNamedAndRemoveUntil(
-                  context, '/home', (Route<dynamic> route) => false);
+                  context, '/funds', (Route<dynamic> route) => false);
               ScaffoldMessenger.of(context).removeCurrentSnackBar();
+
             } on FirebaseAuthException catch (e) {
               if (e.code == 'weak-password') {
                 Utils.showSnackBar(context, "Password is too weak");
