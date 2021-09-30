@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fund_monitoring/models/fund.dart';
 import 'package:fund_monitoring/utils.dart';
-import 'package:intl/intl.dart';
 
 class FundFormScreen extends StatelessWidget {
   const FundFormScreen({Key? key}) : super(key: key);

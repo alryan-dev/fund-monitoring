@@ -15,7 +15,7 @@ class FundDetailsAppBar extends StatelessWidget with PreferredSizeWidget {
       actions: [
         IconButton(
           icon: Icon(Icons.add),
-          onPressed: () => Navigator.pushNamed(context, '/fund-form'),
+          onPressed: () => Navigator.pushNamed(context, '/expense-form'),
         ),
       ],
       flexibleSpace: Container(

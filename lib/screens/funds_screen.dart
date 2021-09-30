@@ -11,8 +11,31 @@ class FundsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer(
+        child: ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(color: Colors.blue),
+              child: Text('Fund Monitoring'),
+            ),
+            ListTile(
+              title: const Text('Funds'),
+              onTap: () => Navigator.pop(context),
+            ),
+            ListTile(
+              title: const Text('Expense Types'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/expense-types');
+              },
+            ),
+          ],
+        ),
+      ),
       appBar: AppBar(
-        title: Text("Home"),
+        title: Text("Funds"),
         actions: [
           IconButton(
             icon: Icon(Icons.add),

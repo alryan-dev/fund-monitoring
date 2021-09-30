@@ -25,4 +25,15 @@ class Fund {
     this.closed = fund['closed'];
     this.createdBy = UserModel.fromMap(fund["createdBy"]);
   }
+
+  Fund.fromMap(Map fund) {
+    this.uid = fund['uid'];
+    this.amount = fund['amount'];
+    this.dateFrom = Utils.stringToDateTime(fund['dateFrom']);
+    this.dateTo = Utils.stringToDateTime(fund['dateTo']);
+    this.remarks = fund['remarks'];
+    this.createdOn = Utils.stringToDateTime(fund['createdOn']);
+    this.closed = fund['closed'];
+    this.createdBy = UserModel.fromMap(fund["createdBy"]);
+  }
 }
