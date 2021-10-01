@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fund_monitoring/models/expense_type.dart';
 import 'package:fund_monitoring/models/fund.dart';
 import 'package:fund_monitoring/models/user_model.dart';
-import 'package:fund_monitoring/utils.dart';
 
 class Expense {
   String uid = "";
@@ -22,9 +21,9 @@ class Expense {
     this.amount = expense['amount'];
     this.type = ExpenseType.fromMap(expense["type"]);
     this.description = expense['description'];
-    this.date = Utils.stringToDateTime(expense['date']);
+    this.date = DateTime.fromMillisecondsSinceEpoch(expense['date']);
     this.createdBy = UserModel.fromMap(expense["createdBy"]);
-    this.createdOn = Utils.stringToDateTime(expense['createdOn']);
-    this.fund = Fund.fromMap(expense["createdBy"]);
+    this.createdOn = DateTime.fromMillisecondsSinceEpoch(expense['createdOn']);
+    this.fund = Fund.fromMap(expense["fund"]);
   }
 }

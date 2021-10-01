@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fund_monitoring/app_states/selected_fund.dart';
 import 'package:fund_monitoring/models/expense.dart';
 import 'package:fund_monitoring/models/expense_type.dart';
 import 'package:fund_monitoring/utils.dart';
+import 'package:provider/provider.dart';
 
 class ExpenseFormScreen extends StatelessWidget {
   const ExpenseFormScreen({Key? key}) : super(key: key);
@@ -233,10 +235,10 @@ class _ExpenseFormState extends State<ExpenseForm> {
     Map<String, dynamic> expense = {
       'amount': _expense.amount,
       'type': {
-        'uid' :  _expense.type?.uid,
-        'name' :  _expense.type?.name,
+        'uid': _expense.type?.uid,
+        'name': _expense.type?.name,
       },
-      'remarks': _descriptionCtrl.text,
+      'description': _descriptionCtrl.text,
       'date': _expense.date?.toUtc().millisecondsSinceEpoch,
       'createdBy': {
         'uid': FirebaseAuth.instance.currentUser?.uid,
@@ -244,6 +246,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
         'email': FirebaseAuth.instance.currentUser?.email,
       },
       'createdOn': DateTime.now().toUtc().millisecondsSinceEpoch,
+      'fund': Provider.of<SelectedFund>(context, listen: false).fund?.toMap()
     };
 
     try {

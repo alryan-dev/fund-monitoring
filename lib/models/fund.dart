@@ -29,11 +29,28 @@ class Fund {
   Fund.fromMap(Map fund) {
     this.uid = fund['uid'];
     this.amount = fund['amount'];
-    this.dateFrom = Utils.stringToDateTime(fund['dateFrom']);
-    this.dateTo = Utils.stringToDateTime(fund['dateTo']);
+    this.dateFrom = DateTime.fromMillisecondsSinceEpoch(fund['dateFrom']);
+    this.dateTo = DateTime.fromMillisecondsSinceEpoch(fund['dateTo']);
     this.remarks = fund['remarks'];
-    this.createdOn = Utils.stringToDateTime(fund['createdOn']);
+    this.createdOn = DateTime.fromMillisecondsSinceEpoch(fund['createdOn']);
     this.closed = fund['closed'];
     this.createdBy = UserModel.fromMap(fund["createdBy"]);
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'uid': this.uid,
+      'amount': this.amount,
+      'dateFrom': this.dateFrom?.toUtc().millisecondsSinceEpoch,
+      'dateTo': this.dateTo?.toUtc().millisecondsSinceEpoch,
+      'remarks': this.remarks,
+      'createdBy': {
+        'uid': this.createdBy?.uid,
+        'displayName': this.createdBy?.displayName,
+        'email': this.createdBy?.email,
+      },
+      'createdOn': this.createdOn?.toUtc().millisecondsSinceEpoch,
+      'closed': this.closed
+    };
   }
 }
