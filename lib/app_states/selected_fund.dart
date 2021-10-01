@@ -12,6 +12,7 @@ class SelectedFund with ChangeNotifier {
   set fund(Fund? fund) {
     remainingAmount = fund?.amount ?? 0;
     _fund = fund;
+    notifyListeners();
   }
 
   List get expenseList => _expenseList;

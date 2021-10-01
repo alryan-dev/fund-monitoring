@@ -22,7 +22,11 @@ class _FundExpensesTabState extends State<FundExpensesTab> {
             title:
                 Text(Utils.formatAmount(selectedFund.expenseList[idx].amount)),
             subtitle: Text(selectedFund.expenseList[idx].type?.name ?? ''),
-            onTap: () {},
+            onTap: () => Navigator.pushNamed(
+              context,
+              '/expense-details',
+              arguments: selectedFund.expenseList[idx],
+            ),
           ),
           separatorBuilder: (BuildContext context, int index) =>
               const Divider(height: 0, thickness: 1),

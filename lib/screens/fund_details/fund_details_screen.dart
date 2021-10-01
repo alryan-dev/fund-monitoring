@@ -27,9 +27,12 @@ class FundDetailsScreen extends StatelessWidget {
             FundDetailsTab(),
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => Navigator.pushNamed(context, '/expense-form'),
-          child: const Icon(Icons.add),
+        floatingActionButton: Visibility(
+          visible: !(_selectedFund.fund?.closed ?? false),
+          child: FloatingActionButton(
+            onPressed: () => Navigator.pushNamed(context, '/expense-form'),
+            child: const Icon(Icons.add),
+          ),
         ),
       ),
     );
