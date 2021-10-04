@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fund_monitoring/app_states/selected_fund.dart';
 import 'package:fund_monitoring/models/fund.dart';
@@ -11,29 +12,7 @@ class FundsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(
-        child: ListView(
-          // Important: Remove any padding from the ListView.
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(color: Colors.blue),
-              child: Text('Fund Monitoring'),
-            ),
-            ListTile(
-              title: const Text('Funds'),
-              onTap: () => Navigator.pop(context),
-            ),
-            ListTile(
-              title: const Text('Expense Types'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/expense-types');
-              },
-            ),
-          ],
-        ),
-      ),
+      drawer: drawer(context),
       appBar: AppBar(
         title: Text("Funds"),
         actions: [
@@ -45,6 +24,56 @@ class FundsScreen extends StatelessWidget {
       ),
       body: FundsList(),
     );
+  }
+
+  Widget drawer(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        // Important: Remove any padding from the ListView.
+        padding: EdgeInsets.zero,
+        children: [
+          const DrawerHeader(
+            decoration: BoxDecoration(color: Colors.blue),
+            child: Text('Fund Monitoring'),
+          ),
+          ListTile(
+            title: const Text('Funds'),
+            onTap: () => Navigator.pop(context),
+          ),
+          ListTile(
+            title: const Text('Expense Types'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/expense-types');
+            },
+          ),
+          ListTile(
+            title: const Text('Log-out'),
+            onTap: () {
+              Navigator.pop(context);
+              logout(context);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void logout(BuildContext context) async {
+    Utils.showSnackBar(
+      context,
+      "Logging out...",
+      duration: Duration(days: 365),
+    );
+
+    try {
+      await FirebaseAuth.instance.signOut();
+      Navigator.pushNamedAndRemoveUntil(
+          context, '/log-in', (Route<dynamic> route) => false);
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+    } catch (e) {
+      print('Error: $e');
+    }
   }
 }
 
