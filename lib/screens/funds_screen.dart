@@ -88,7 +88,10 @@ class _FundsListState extends State<FundsList> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: FirebaseFirestore.instance.collection('funds').snapshots(),
+      stream: FirebaseFirestore.instance
+          .collection('funds')
+          .orderBy('createdOn', descending: true)
+          .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
           return Center(child: Text('Something went wrong'));

@@ -3,6 +3,7 @@ import 'package:currency_text_input_formatter/currency_text_input_formatter.dart
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fund_monitoring/models/fund.dart';
+import 'package:fund_monitoring/models/user_model.dart';
 import 'package:fund_monitoring/utils.dart';
 
 class FundFormScreen extends StatelessWidget {
@@ -200,22 +201,16 @@ class _FundFormState extends State<FundForm> {
     FocusScope.of(context).unfocus();
     Utils.showSnackBar(context, "Saving...", duration: Duration(days: 365));
 
-    Map<String, dynamic> fund = {
-      'amount': _fund.amount,
-      'dateFrom': _dateFromCtrl.text,
-      'dateTo': _dateToCtrl.text,
-      'remarks': _remarksCtrl.text,
-      'createdBy': {
-        'uid': FirebaseAuth.instance.currentUser?.uid,
-        'displayName': FirebaseAuth.instance.currentUser?.displayName,
-        'email': FirebaseAuth.instance.currentUser?.email,
-      },
-      'createdOn': Utils.dateTimeToString(DateTime.now()),
-      'closed': false
-    };
+    _fund.remarks = _remarksCtrl.text;
+    _fund.createdOn = DateTime.now();
+    _fund.createdBy = UserModel(
+      uid: FirebaseAuth.instance.currentUser?.uid ?? "",
+      displayName: FirebaseAuth.instance.currentUser?.displayName ?? "",
+      email: FirebaseAuth.instance.currentUser?.email ?? "",
+    );
 
     try {
-      await FirebaseFirestore.instance.collection('funds').add(fund);
+      await FirebaseFirestore.instance.collection('funds').add(_fund.toMap());
       Navigator.pushNamedAndRemoveUntil(
         context,
         '/funds',

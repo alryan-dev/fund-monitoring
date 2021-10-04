@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fund_monitoring/models/user_model.dart';
-import 'package:fund_monitoring/utils.dart';
 
 class Fund {
   String uid = "";
@@ -18,10 +17,10 @@ class Fund {
     Map fund = queryDocumentSnapshot.data() as Map<String, dynamic>;
     this.uid = queryDocumentSnapshot.id;
     this.amount = fund['amount'];
-    this.dateFrom = Utils.stringToDateTime(fund['dateFrom']);
-    this.dateTo = Utils.stringToDateTime(fund['dateTo']);
+    this.dateFrom = DateTime.fromMillisecondsSinceEpoch(fund['dateFrom']);
+    this.dateTo = DateTime.fromMillisecondsSinceEpoch(fund['dateTo']);
     this.remarks = fund['remarks'];
-    this.createdOn = Utils.stringToDateTime(fund['createdOn']);
+    this.createdOn = DateTime.fromMillisecondsSinceEpoch(fund['createdOn']);
     this.closed = fund['closed'];
     this.createdBy = UserModel.fromMap(fund["createdBy"]);
   }
