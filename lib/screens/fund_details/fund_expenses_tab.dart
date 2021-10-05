@@ -24,7 +24,7 @@ class _FundExpensesTabState extends State<FundExpensesTab> {
             subtitle: Text(selectedFund.expenseList[idx].type?.name ?? ''),
             onTap: () => Navigator.pushNamed(
               context,
-              '/expense-details',
+              '/expense-form',
               arguments: selectedFund.expenseList[idx],
             ),
           ),

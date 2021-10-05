@@ -16,4 +16,10 @@ class ExpenseType {
     this.uid = expenseType['uid'];
     this.name = expenseType['name'];
   }
+
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> expenseType = {"name": this.name};
+    if (this.uid.isNotEmpty) expenseType["uid"] = this.uid;
+    return expenseType;
+  }
 }

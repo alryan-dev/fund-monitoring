@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fund_monitoring/app_states/selected_fund.dart';
-import 'package:fund_monitoring/models/fund.dart';
 import 'package:fund_monitoring/utils.dart';
 import 'package:provider/provider.dart';
 
@@ -21,17 +20,14 @@ class _FundDetailsAppBarState extends State<FundDetailsAppBar> {
   @override
   Widget build(BuildContext context) {
     _selectedFund = Provider.of(context);
-    Fund? fund = _selectedFund.fund;
-
-    print('_FundDetailsAppBarState');
-    print(_selectedFund.fund?.closed);
 
     return AppBar(
       actions: [
-        if (!(_selectedFund.fund?.closed ?? false)) IconButton(
-          icon: Icon(Icons.check),
-          onPressed: _showCloseConfirmationDialog,
-        ),
+        if (!(_selectedFund.fund?.closed ?? false))
+          IconButton(
+            icon: Icon(Icons.check),
+            onPressed: _showCloseConfirmationDialog,
+          ),
       ],
       flexibleSpace: Container(
         padding:

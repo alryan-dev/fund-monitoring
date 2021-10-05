@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fund_monitoring/app_states/selected_fund.dart';
 import 'package:fund_monitoring/screens/expense_details_screen.dart';
-import 'package:fund_monitoring/screens/expense_form_screen.dart';
+import 'package:fund_monitoring/screens/expense_form/expense_form_screen.dart';
 import 'package:fund_monitoring/screens/expense_types/expense_types_screen.dart';
 import 'package:fund_monitoring/screens/fund_details/fund_details_screen.dart';
 import 'package:fund_monitoring/screens/fund_form_screen.dart';
@@ -41,7 +41,10 @@ class _InitFlutterFireState extends State<InitFlutterFire> {
             return MyApp();
           }
 
-          return Text("Loading...", textDirection: TextDirection.ltr,);
+          return Text(
+            "Loading...",
+            textDirection: TextDirection.ltr,
+          );
         },
       ),
     );

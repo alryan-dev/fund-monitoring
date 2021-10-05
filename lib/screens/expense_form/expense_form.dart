@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fund_monitoring/app_states/selected_fund.dart';
 import 'package:fund_monitoring/models/expense.dart';
@@ -8,20 +7,10 @@ import 'package:fund_monitoring/models/expense_type.dart';
 import 'package:fund_monitoring/utils.dart';
 import 'package:provider/provider.dart';
 
-class ExpenseFormScreen extends StatelessWidget {
-  const ExpenseFormScreen({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Add Expense")),
-      body: ExpenseForm(),
-    );
-  }
-}
-
 class ExpenseForm extends StatefulWidget {
-  const ExpenseForm({Key? key}) : super(key: key);
+  final Expense? expense;
+
+  const ExpenseForm(this.expense, {Key? key}) : super(key: key);
 
   @override
   _ExpenseFormState createState() => _ExpenseFormState();
@@ -29,17 +18,53 @@ class ExpenseForm extends StatefulWidget {
 
 class _ExpenseFormState extends State<ExpenseForm> {
   final _formKey = GlobalKey<FormState>();
-  final _amountCtrl = TextEditingController();
-  final _typeCtrl = TextEditingController();
-  final _descriptionCtrl = TextEditingController();
-  final _dateCtrl = TextEditingController();
-  final _expense = Expense();
+  late final TextEditingController _amountCtrl;
+  late final TextEditingController _typeCtrl;
+  late final TextEditingController _descriptionCtrl;
+  late final TextEditingController _dateCtrl;
+  late final Expense _expense;
   List _typesList = <ExpenseType>[];
+  final _currencyTextInputFormatter = CurrencyTextInputFormatter(
+    decimalDigits: 2,
+    symbol: '₱',
+    locale: 'en_PH',
+  );
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.expense == null) {
+      _expense = Expense();
+      _expense.date = DateTime.now();
+
+      // Instantiate controllers
+      _amountCtrl = TextEditingController();
+      _typeCtrl = TextEditingController();
+      _descriptionCtrl = TextEditingController();
+      _dateCtrl = TextEditingController(
+        text: Utils.dateTimeToString(DateTime.now()),
+      );
+    } else {
+      _expense = widget.expense!;
+
+      // Instantiate controllers
+      _amountCtrl = TextEditingController(
+        text: _currencyTextInputFormatter.format(
+          _expense.amount.toStringAsFixed(2),
+        ),
+      );
+
+      _typeCtrl = TextEditingController(text: _expense.type?.name);
+      _descriptionCtrl = TextEditingController(text: _expense.description);
+      _dateCtrl = TextEditingController(
+        text: Utils.dateTimeToString(_expense.date),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    _expense.date = DateTime.now();
-
     return Form(
       key: _formKey,
       child: SingleChildScrollView(
@@ -67,13 +92,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
     return TextFormField(
       keyboardType: TextInputType.number,
       controller: _amountCtrl,
-      inputFormatters: [
-        CurrencyTextInputFormatter(
-          decimalDigits: 2,
-          symbol: '₱',
-          locale: 'en_PH',
-        ),
-      ],
+      inputFormatters: [_currencyTextInputFormatter],
       decoration: InputDecoration(
         icon: Icon(Icons.payments_outlined, size: 30),
         border: OutlineInputBorder(),
@@ -155,10 +174,10 @@ class _ExpenseFormState extends State<ExpenseForm> {
 
   Widget _descriptionField() {
     return TextFormField(
+      controller: _descriptionCtrl,
       keyboardType: TextInputType.multiline,
       maxLines: 2,
       minLines: 2,
-      controller: _descriptionCtrl,
       decoration: InputDecoration(
         icon: Icon(Icons.article_outlined, size: 30),
         border: OutlineInputBorder(),
@@ -170,8 +189,6 @@ class _ExpenseFormState extends State<ExpenseForm> {
   }
 
   Widget _dateField() {
-    _dateCtrl.text = Utils.dateTimeToString(DateTime.now());
-
     return TextFormField(
       controller: _dateCtrl,
       decoration: InputDecoration(
@@ -232,27 +249,25 @@ class _ExpenseFormState extends State<ExpenseForm> {
     FocusScope.of(context).unfocus();
     Utils.showSnackBar(context, "Saving...", duration: Duration(days: 365));
 
-    Map<String, dynamic> expense = {
-      'amount': _expense.amount,
-      'type': {
-        'uid': _expense.type?.uid,
-        'name': _expense.type?.name,
-      },
-      'description': _descriptionCtrl.text,
-      'date': _expense.date?.toUtc().millisecondsSinceEpoch,
-      'createdBy': {
-        'uid': FirebaseAuth.instance.currentUser?.uid,
-        'displayName': FirebaseAuth.instance.currentUser?.displayName,
-        'email': FirebaseAuth.instance.currentUser?.email,
-      },
-      'createdOn': DateTime.now().toUtc().millisecondsSinceEpoch,
-      'fund': Provider.of<SelectedFund>(context, listen: false).fund?.toMap()
-    };
+    _expense.description = _descriptionCtrl.text;
+    _expense.fund = Provider.of<SelectedFund>(context, listen: false).fund;
+    Map<String, dynamic> expense = _expense.toMap();
 
     try {
-      await FirebaseFirestore.instance.collection('expenses').add(expense);
+      if (_expense.uid.isNotEmpty) {
+        await FirebaseFirestore.instance
+            .collection('expenses')
+            .doc(expense["uid"])
+            .update(expense);
+      } else {
+        await FirebaseFirestore.instance.collection('expenses').add(expense);
+      }
+
       Navigator.pop(context);
-      Utils.showSnackBar(context, "Expense Added!");
+      Utils.showSnackBar(
+        context,
+        (_expense.uid.isNotEmpty) ? "Expense Edited!" : "Expense Added!",
+      );
     } catch (e) {
       print("Error: $e");
     }
